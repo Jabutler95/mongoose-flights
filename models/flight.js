@@ -24,5 +24,10 @@ const flightsSchema = new Schema ({
       return new Date(today.setFullYear(today.getFullYear() + 1))
     }
   }
-  
 })
+
+const Flight = mongoose.model('Flight', flightsSchema)
+
+export {
+  Flight
+}
