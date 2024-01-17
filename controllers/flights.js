@@ -45,7 +45,7 @@ function deleteFlight(req, res) {
   })
   .catch(err => {
     console.log(err)
-    res.redirect('/flights')
+    res.redirect('/')
   })
 }
 
