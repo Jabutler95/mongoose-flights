@@ -1,0 +1,29 @@
+<%- include('../partials/html-head') %>
+<link rel="stylesheet" href="/stylesheets/meals/new.css" />
+<%- include('../partials/nav') %>
+
+<main>
+	<h1><%= title %></h1>
+  <form id="add-meal-form" action="/meals" method="POST">
+    <label for="name-input">Name:</label>
+    <input type="text" name="name" id="name-input">
+    <button type="submit">Add Meal</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Meals</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% meals.forEach(meal => { %>
+        <tr>
+          <td><%= meal.name %></td>
+        </tr>
+    <%  }); %>
+    </tbody>
+  </table>
+</main>
+
+<%- include("../partials/footer") %>

@@ -1,4 +1,5 @@
 import { Flight } from "../models/flight.js"
+import { Meal } from "../models/meal.js"
 
 function index(req, res) {
   Flight.find({})
@@ -21,13 +22,6 @@ function newFlight (req, res) {
 }
 
 function create(req, res) {
-  req.body.nowShowing = !!req.body.nowShowing
-  if (req.body.cast) {
-    req.body.cast = req.body.cast.split(', ')
-  }
-  for (let key in req.body) {
-    if (req.body[key] === '') delete req.body[key]
-  }
   Flight.create(req.body)
   .then(flight => {
     res.redirect('/flights')
@@ -51,10 +45,19 @@ function deleteFlight(req, res) {
 
 function show(req, res) {
   Flight.findById(req.params.flightId)
+  .populate('meals')
   .then(flight => {
-    res.render("flights/show", {
-      flight: flight,
-      title: 'Flight Details'
+    Meal.find({_id: {$nin: flight.meals}})
+    .then(meals => {
+      res.render('flights/show', {
+        flight: flight,
+        title: 'Flight Detail',
+        meals: meals
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      res.redirect('/')
     })
   })
   .catch(err => {
@@ -118,6 +121,25 @@ function createTicket(req, res) {
 //   })
 // }
 
+function addToMeals(req, res) {
+  Flight.findById(req.params.flightId)
+  .then(flight => {
+    flight.meals.push(req.body.mealId)
+    flight.save()
+    .then(() => {
+      res.redirect(`/flights/${flight._id}`)
+    })
+    .catch(err => {
+      console.log(err)
+      res.redirect('/flights')
+    })
+  })
+  .catch(err => {
+    console.log(err)
+    res.redirect('/flights')
+  })
+}
+
 export {
   index,
   newFlight as new, 
@@ -127,5 +149,6 @@ export {
   edit,
   update,
   createTicket,
+  addToMeals
   // deleteTicket
 }

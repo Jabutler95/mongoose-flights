@@ -31,7 +31,8 @@ const flightsSchema = new Schema ({
       return new Date(today.setFullYear(today.getFullYear() + 1))
     }
   },
-  tickets: [ticketSchema]
+  tickets: [ticketSchema],
+  meals: [{ type: Schema.Types.ObjectId, ref: 'Meal' }]
 })
 
 const Flight = mongoose.model('Flight', flightsSchema)
